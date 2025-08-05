@@ -1,12 +1,12 @@
 package com.example.noteapp_using_crud
 
-import NoteScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
-import com.example.noteapp_using_crud.database.NoteDatabase
-import com.example.noteapp_using_crud.repository.NoteRepository
+import com.example.noteapp_using_crud.data.db.NoteDatabase
+import com.example.noteapp_using_crud.data.repository.NoteRepository
+import com.example.noteapp_using_crud.ui.NoteScreen
 import com.example.noteapp_using_crud.viewmodel.NoteViewModel
 import com.example.noteapp_using_crud.viewmodel.NoteViewModelFactory
 

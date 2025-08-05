@@ -2,7 +2,7 @@ package com.example.noteapp_using_crud.viewmodel
 
 import androidx.lifecycle.*
 import com.example.noteapp_using_crud.data.Notes
-import com.example.noteapp_using_crud.repository.NoteRepository
+import com.example.noteapp_using_crud.data.repository.NoteRepository
 import kotlinx.coroutines.launch
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {

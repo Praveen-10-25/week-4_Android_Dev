@@ -1,3 +1,5 @@
+package com.example.noteapp_using_crud.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

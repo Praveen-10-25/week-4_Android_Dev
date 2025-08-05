@@ -1,4 +1,4 @@
-package com.example.noteapp_using_crud.repository
+package com.example.noteapp_using_crud.data.repository
 
 import com.example.noteapp_using_crud.dao.NoteDao
 import com.example.noteapp_using_crud.data.Notes
