@@ -10,7 +10,6 @@ import com.example.noteapp_using_crud.data.Notes
 @Database(entities = [Notes::class], version = 1)
 abstract class NoteDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
-
     companion object {
         @Volatile
         private var INSTANCE: NoteDatabase? = null
@@ -27,4 +26,4 @@ abstract class NoteDatabase : RoomDatabase() {
             }
         }
     }
-}
+    }

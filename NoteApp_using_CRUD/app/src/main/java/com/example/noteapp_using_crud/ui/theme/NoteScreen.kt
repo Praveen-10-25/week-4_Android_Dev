@@ -1,4 +1,4 @@
-package com.example.noteapp_using_crud.ui
+package com.example.noteapp_using_crud.ui.theme
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,28 +8,30 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.noteapp_using_crud.data.Notes
 import com.example.noteapp_using_crud.viewmodel.NoteViewModel
 
 @Composable
 fun NoteScreen(viewModel: NoteViewModel) {
     val notes by viewModel.notes.observeAsState(emptyList())
-
-    var title by remember { mutableStateOf("") }
-    var content by remember { mutableStateOf("") }
+    val title by viewModel.title.observeAsState("")
+    val content by viewModel.content.observeAsState("")
 
     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.Top) {
-        OutlinedTextField(value = title, modifier = Modifier.fillMaxWidth(), onValueChange = { title = it }, label = { Text("Title") })
+        OutlinedTextField(
+            value = title,
+            onValueChange = { viewModel.onTitleChange(it) },
+            label = { Text("Title") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(modifier = Modifier.fillMaxWidth(),value = content, onValueChange = { content = it }, label = { Text("Content") })
+        OutlinedTextField(
+            value = content,
+            onValueChange = { viewModel.onContentChange(it) },
+            label = { Text("Content") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = {
-            if (title.isNotBlank() && content.isNotBlank()) {
-                viewModel.addNote(Notes(title = title, content = content))
-                title = ""
-                content = ""
-            }
-        }) {
+        Button(onClick = { viewModel.addNote() }) {
             Text("Add Note")
         }
 

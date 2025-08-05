@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
 import com.example.noteapp_using_crud.data.db.NoteDatabase
 import com.example.noteapp_using_crud.data.repository.NoteRepository
-import com.example.noteapp_using_crud.ui.NoteScreen
+import com.example.noteapp_using_crud.ui.theme.NoteScreen
 import com.example.noteapp_using_crud.viewmodel.NoteViewModel
 import com.example.noteapp_using_crud.viewmodel.NoteViewModelFactory
 
