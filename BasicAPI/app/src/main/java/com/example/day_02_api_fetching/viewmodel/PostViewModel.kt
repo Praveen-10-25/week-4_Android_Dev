@@ -1,29 +1,40 @@
 package com.example.day_02_api_fetching.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.day_02_api_fetching.data.Post
 import com.example.day_02_api_fetching.networking.RF
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PostViewModel: ViewModel() {
+class PostViewModel : ViewModel() {
 
-    private val _posts= MutableLiveData<List<Post>>()
-    val posts : LiveData<List<Post>> = _posts
+    private val _posts = MutableLiveData<List<Post>>()
+    val posts: LiveData<List<Post>> = _posts
 
-    init{
-        fetch()
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
+
+    init {
+        fetchPostsWithDelay()
     }
-    private fun fetch(){
+
+    private fun fetchPostsWithDelay() {
         viewModelScope.launch {
-            try{
-                val result = RF.api.getPosts()
-                _posts.value=result
-            }
-            catch (e:Exception){
-                _posts.value=emptyList()
+            try {
+                delay(2000)
+
+                val deferredPosts = async {
+                    RF.api.getPosts()
+                }
+
+                val result = deferredPosts.await()
+                _posts.value = result
+                _errorMessage.value = null
+
+            } catch (e: Exception) {
+                _posts.value = emptyList()
+                _errorMessage.value = "Failed to load posts: ${e.message}"
             }
         }
     }
