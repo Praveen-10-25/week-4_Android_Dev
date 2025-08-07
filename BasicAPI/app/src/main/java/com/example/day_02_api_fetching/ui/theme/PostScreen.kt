@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -14,21 +14,24 @@ import com.example.day_02_api_fetching.viewmodel.PostViewModel
 
 @Composable
 fun PostScreen(viewModel: PostViewModel = viewModel()) {
-    val posts by viewModel.posts.observeAsState(emptyList())
-    val error by viewModel.errorMessage.observeAsState()
+    val posts by viewModel.posts.collectAsState()
+    val error by viewModel.errorMessage.collectAsState()
     val isLoading = posts.isEmpty() && error == null
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
         if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator()
             }
         }
 
-        if (error != null) {
+        error?.let {
             Text(
-                text = error ?: "",
+                text = it,
                 color = Color.Red,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(8.dp)

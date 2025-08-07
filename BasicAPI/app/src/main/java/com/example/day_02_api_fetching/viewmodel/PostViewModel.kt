@@ -1,40 +1,36 @@
 package com.example.day_02_api_fetching.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.day_02_api_fetching.data.Post
-import com.example.day_02_api_fetching.networking.RF
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
+import com.example.day_02_api_fetching.repository.PostRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-
+import retrofit2.HttpException
+import java.io.IOException
 class PostViewModel : ViewModel() {
-
-    private val _posts = MutableLiveData<List<Post>>()
-    val posts: LiveData<List<Post>> = _posts
-
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> = _errorMessage
+    private val repository = PostRepository()
+    private val _posts = MutableStateFlow<List<Post>>(emptyList())
+    val posts: StateFlow<List<Post>> = _posts
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
 
     init {
-        fetchPostsWithDelay()
+        fetchPosts()
     }
-
-    private fun fetchPostsWithDelay() {
+    private fun fetchPosts() {
         viewModelScope.launch {
             try {
-                delay(2000)
-
-                val deferredPosts = async {
-                    RF.api.getPosts()
-                }
-
-                val result = deferredPosts.await()
+                val result = repository.getPosts()
                 _posts.value = result
                 _errorMessage.value = null
-
+            } catch (e: HttpException) {
+                _errorMessage.value = "Server Error: ${e.code()} ${e.message()}"
+            } catch (e: IOException) {
+                _errorMessage.value = "Network Error: ${e.message ?: "No internet connection"}"
             } catch (e: Exception) {
-                _posts.value = emptyList()
-                _errorMessage.value = "Failed to load posts: ${e.message}"
+                _errorMessage.value = "Unknown Error: ${e.localizedMessage}"
             }
         }
     }
