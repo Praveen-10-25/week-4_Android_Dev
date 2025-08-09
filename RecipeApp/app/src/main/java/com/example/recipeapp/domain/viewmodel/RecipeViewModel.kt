@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.dataLayer.data.Recipe
 import com.example.recipeapp.dataLayer.data.UiState
-import com.example.recipeapp.dataLayer.data.repository.RecipeRepository
+import com.example.recipeapp.dataLayer.repository.RecipeRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

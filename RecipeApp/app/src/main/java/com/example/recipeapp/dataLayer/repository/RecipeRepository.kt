@@ -1,4 +1,4 @@
-package com.example.recipeapp.dataLayer.data.repository
+package com.example.recipeapp.dataLayer.repository
 
 import com.example.recipeapp.dataLayer.data.Recipe
 import com.example.recipeapp.domain.RetroFitInstance.api
