@@ -16,26 +16,39 @@ import com.example.recipebook.presentation.ui.RecipeListScreen
 fun NavGraph(viewModel: RecipeViewModel) {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = "list") {
+    NavHost(navController = navController, startDestination = "list") {
+
         composable("list") {
             RecipeListScreen(navController)
         }
+
         composable(
             "ingredients/{recipeId}",
             arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
         ) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getInt("recipeId") ?: -1
-            RecipeDetailScreen(recipeId, navController)
+            RecipeDetailScreen(recipeId = recipeId, navController = navController)
         }
+
         composable("localList") {
             LocalRecipeListScreen(navController, viewModel)
         }
+
         composable(
             "localDetail/{localId}",
             arguments = listOf(navArgument("localId") { type = NavType.IntType })
         ) { backStackEntry ->
             val localId = backStackEntry.arguments?.getInt("localId") ?: -1
-            LocalRecipeDetailScreen(localId, viewModel)
+            LocalRecipeDetailScreen(localId = localId, viewModel = viewModel)
+        }
+
+        composable(
+            "recipeDetail/{recipeId}",
+            arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getInt("recipeId") ?: -1
+            RecipeDetailScreen(recipeId = recipeId, navController = navController)
         }
     }
+
 }

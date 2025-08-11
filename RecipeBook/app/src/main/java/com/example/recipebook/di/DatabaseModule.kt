@@ -5,12 +5,11 @@ import androidx.room.Room
 import com.example.recipebook.datalayer.dao.RecipeDao
 import com.example.recipebook.datalayer.database.RecipeDatabase
 import com.example.recipebook.datalayer.repository.LocalRecipeRepository
-import com.example.recipebook.domain.Api
 import com.example.recipebook.datalayer.repository.RecipeRepository
 import com.example.recipebook.datalayer.repository.RecipeRepositoryImpl
+import com.example.recipebook.domain.Api
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +19,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import dagger.hilt.android.qualifiers.ApplicationContext
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -62,5 +62,11 @@ object AppModule {
     @Singleton
     fun provideLocalRecipeRepository(recipeDao: RecipeDao): LocalRecipeRepository {
         return LocalRecipeRepository(recipeDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRecipeRepository(api: Api, dao: RecipeDao): RecipeRepository {
+        return RecipeRepositoryImpl(api, dao)
     }
 }

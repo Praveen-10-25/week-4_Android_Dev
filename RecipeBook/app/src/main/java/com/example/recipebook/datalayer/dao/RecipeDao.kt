@@ -2,6 +2,7 @@ package com.example.recipebook.datalayer.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.recipebook.datalayer.data.Converters
 import com.example.recipebook.datalayer.data.RecipeEntity
 
 @Dao
@@ -21,6 +22,9 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipes")
     suspend fun getAllRecipes(): List<RecipeEntity>
+
+    @Query("SELECT * FROM recipes WHERE id = :id LIMIT 1")
+    fun getRecipeById(id: Int): LiveData<RecipeEntity>
 
     @Update
     suspend fun updateRecipe(recipe: RecipeEntity)

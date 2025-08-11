@@ -1,8 +1,10 @@
 package com.example.recipebook.datalayer.repository
 
+import androidx.lifecycle.LiveData
 import com.example.recipebook.domain.Api
 import com.example.recipebook.datalayer.dao.RecipeDao
 import com.example.recipebook.datalayer.data.Recipe
+import com.example.recipebook.datalayer.data.RecipeEntity
 import com.example.recipebook.datalayer.mapper.toDomain
 import com.example.recipebook.datalayer.mapper.toEntity
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +31,10 @@ class RecipeRepositoryImpl @Inject constructor(
             }
         }
     }
+    override fun getRecipeById(id: Int): LiveData<RecipeEntity> {
+        return dao.getRecipeById(id)
+    }
+
 
     override suspend fun getDefaultRecipes(): Result<List<Recipe>> {
         return withContext(Dispatchers.IO) {

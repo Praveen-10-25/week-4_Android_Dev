@@ -1,5 +1,6 @@
 package com.example.recipebook.presentation.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -9,20 +10,21 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.recipebook.domain.viewmodel.RecipeViewModel
-
 @Composable
 fun RecipeDetailScreen(
     recipeId: Int,
     navController: NavController,
     viewModel: RecipeViewModel = hiltViewModel()
 ) {
-    val recipe = viewModel.recipes.observeAsState().value?.find { it.id == recipeId }
+    val context = LocalContext.current
+    val recipe by viewModel.getRecipeById(recipeId).observeAsState()
 
     recipe?.let {
         Column(
@@ -30,10 +32,11 @@ fun RecipeDetailScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Navigate to Local Recipes
-            Button(onClick = { navController.navigate("localList") }) {
-                Text("My Recipes")
-            }
+
+            Text(
+                text = it.title,
+                style = MaterialTheme.typography.titleLarge
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -42,7 +45,7 @@ fun RecipeDetailScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AsyncImage(
-                    model = it.featured_image,
+                    model = it.featuredImage,
                     contentDescription = it.title,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -93,17 +96,31 @@ fun RecipeDetailScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = {
-                    viewModel.addLocalRecipe(
-                        title = it.title,
-                        ingredients = it.ingredients,
-                        imageUrl = it.featured_image ?: ""
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Save to My Recipes")
+                Button(
+                    onClick = {
+                        viewModel.addLocalRecipe(
+                            title = it.title,
+                            ingredients = it.ingredients,
+                            imageUrl = it.featuredImage ?: ""
+                        )
+                        Toast.makeText(context, "Recipe successfully added!", Toast.LENGTH_SHORT).show()
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Save Recipe")
+                }
+
+                Button(
+                    onClick = { navController.navigate("localList") },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("My Recipes")
+                }
             }
         }
     } ?: run {

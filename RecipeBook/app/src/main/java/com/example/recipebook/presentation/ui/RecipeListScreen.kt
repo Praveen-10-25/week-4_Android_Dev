@@ -55,13 +55,23 @@ fun RecipeListScreen(
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = { viewModel.fetchRecipes(query) },
-            enabled = !state.loading
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Search")
+            Button(onClick = { navController.navigate("localList") }) {
+                Text("My Recipes")
+            }
+
+            Button(
+                onClick = { viewModel.fetchRecipes(query) },
+                enabled = !state.loading
+            ) {
+                Text("Search")
+            }
         }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -87,7 +97,8 @@ fun RecipeListScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    navController.navigate("ingredients/${recipe.id}")
+                                    navController.navigate("recipeDetail/${recipe.id}")
+
                                 },
                             elevation = CardDefaults.cardElevation(6.dp),
                             shape = MaterialTheme.shapes.medium

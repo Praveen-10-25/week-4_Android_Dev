@@ -13,5 +13,8 @@ class LocalRecipeRepository @Inject constructor(
     suspend fun deleteRecipe(recipe: RecipeEntity) = recipeDao.deleteRecipe(recipe)
     fun getAllRecipesLive(): LiveData<List<RecipeEntity>> = recipeDao.getAllRecipesLive()
     suspend fun getAllRecipes(): List<RecipeEntity> = recipeDao.getAllRecipes()
+    fun getRecipeById(id: Int): LiveData<RecipeEntity> {
+        return recipeDao.getRecipeById(id)
+    }
     suspend fun updateRecipe(recipe: RecipeEntity) = recipeDao.updateRecipe(recipe)
 }

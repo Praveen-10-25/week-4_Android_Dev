@@ -90,10 +90,42 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
+    fun getRecipeById(id: Int): LiveData<RecipeEntity> {
+        return remoteRepository.getRecipeById(id)
+    }
 
     fun deleteLocalRecipe(recipe: RecipeEntity) {
         viewModelScope.launch {
             localRepository.deleteRecipe(recipe)
         }
     }
+    fun fetchRecipesAndStore(query: String) {
+        _uiState.value = _uiState.value.copy(loading = true, error = null)
+        viewModelScope.launch {
+            val result = remoteRepository.getRecipes(query)
+            delay(200)
+            result.onSuccess { recipeList ->
+                _recipes.value = recipeList
+                _error.value = null
+                _uiState.value = UiState(loading = false, recipes = recipeList, error = null)
+
+                val entities = recipeList.map { recipe ->
+                    RecipeEntity(
+                        id = recipe.id,
+                        title = recipe.title,
+                        featuredImage = recipe.featured_image,
+                        ingredients = recipe.ingredients
+                    )
+                }
+
+                localRepository.insertRecipes(entities)
+
+            }.onFailure { throwable ->
+                _recipes.value = emptyList()
+                _error.value = throwable.message
+                _uiState.value = UiState(loading = false, recipes = emptyList(), error = throwable.message)
+            }
+        }
+    }
+
 }
